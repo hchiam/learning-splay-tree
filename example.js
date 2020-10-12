@@ -139,24 +139,28 @@ SplayBST.prototype.rotateLeft = function (node) {
 
 var splayTree = new SplayBST();
 splayTree.add(5);
+prettyPrintTree(splayTree.root);
 splayTree.add(1);
+prettyPrintTree(splayTree.root);
 splayTree.add(4);
+prettyPrintTree(splayTree.root);
 splayTree.add(2);
+prettyPrintTree(splayTree.root);
 splayTree.add(3);
-console.log(JSON.stringify(splayTree) + "\n\n");
+// console.log(JSON.stringify(splayTree) + "\n\n");
 prettyPrintTree(splayTree.root);
 
-function prettyPrintTree(node, level = 0) {
-  if (!node || !node.value) return;
-  console.log(" ".repeat(level) + node.value);
-  if (node.left) {
-    prettyPrintTree(node.left, level + 1);
-  } else {
-    console.log(" ".repeat(level) + "x");
-  }
-  if (node.right) {
-    prettyPrintTree(node.right, level + 1);
-  } else {
-    console.log(" ".repeat(level) + "x");
+function prettyPrintTree(node) {
+  prettyPrintTree_recursive(node, 0);
+  console.log(); // new line after tree
+  function prettyPrintTree_recursive(node, level = 0) {
+    if (!node || !node.value) return;
+    console.log(" ".repeat(level) + node.value);
+    if (node.left) {
+      prettyPrintTree_recursive(node.left, level + 1);
+    }
+    if (node.right) {
+      prettyPrintTree_recursive(node.right, level + 1);
+    }
   }
 }
