@@ -57,57 +57,64 @@ SplayBST.prototype.add = function (value) {
  * modified version of this:
  * https://github.com/slmoore/js-splay-tree/blob/master/splay-tree-clean.js#L177
  */
-SplayBST.prototype.splay = function (value) {
-  // returns new root
+SplayBST.prototype.splay = function (newValue) {
+  // returns new root after having rotated the tree to move the newly-added value to root
   // assumes valid value
-  var splayRecursive = function (node, value) {
+  var splayRecursive = function (node, newValue) {
     if (node === null) return null; // done
 
-    if (value < node.value) {
+    if (newValue < node.value) {
+      // (new value is located at left of root)
       // look left:
       if (node.left === null) return node; // done
 
-      if (value < node.left.value) {
-        // will need to (?) + zig zig:
-        node.left.left = splayRecursive(node.left.left, value);
+      if (newValue < node.left.value) {
+        // will need to (?) + zig:
+        // (i.e., recursively move newValue to left left node, then rotate right to be at ROOT's left)
+        node.left.left = splayRecursive(node.left.left, newValue);
         node = this.rotateRight(node);
-      } else if (value > node.left.value) {
-        // will need to (?) + zag zig:
-        node.left.right = splayRecursive(node.left.right, value);
+      } else if (newValue > node.left.value) {
+        // will need to (?) + zag:
+        // (i.e., recursively move newValue to left right node, then rotate left to be at ROOT's left)
+        node.left.right = splayRecursive(node.left.right, newValue);
         if (node.left.right !== null) node.left = this.rotateLeft(node.left);
       }
 
       if (node.left === null) {
         return node; // done
       } else {
-        return this.rotateRight(node); // zig
+        return this.rotateRight(node); // + zig (i.e. after the previous steps, now rotate right to make root's left become ROOT)
       }
-    } else if (value > node.value) {
+    } else if (newValue > node.value) {
+      // (otherwise if new value is located at right of root)
       // look right:
       if (node.right === null) return node; // done
 
-      if (value > node.right.value) {
+      if (newValue > node.right.value) {
         // will need to (?) + zag zag:
-        node.right.right = splayRecursive(node.right.right, value);
+        // (i.e., recursively move newValue to right right node, then rotate left to be at ROOT's right)
+        node.right.right = splayRecursive(node.right.right, newValue);
         node = this.rotateLeft(node);
-      } else if (value < node.right.value) {
+      } else if (newValue < node.right.value) {
         // will need to (?) + zig zag:
-        node.right.left = splayRecursive(node.right.left, value);
+        // (i.e., recursively move newValue to right left node, then rotate right to be at ROOT's right)
+        node.right.left = splayRecursive(node.right.left, newValue);
         if (node.right.left !== null) node.right = this.rotateRight(node.right);
       }
 
       if (node.right === null) {
         return node; // done
       } else {
-        return this.rotateLeft(node); // zag
+        return this.rotateLeft(node); // + zag (i.e. after the previous steps, now rotate left to make root's right become ROOT)
       }
     } else {
-      // if value === node.value
+      // otherwise if the value is already at the ROOT
+      // if new value === node.value
       return node; // done
     }
-  }.bind(this);
+  }.bind(this); // make this mean the ROOT splay tree
 
-  this.root = splayRecursive(this.root, value);
+  this.root = splayRecursive(this.root, newValue);
   return this.root;
 };
 
