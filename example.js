@@ -113,6 +113,15 @@ SplayBST.prototype.splay = function (value) {
 
 SplayBST.prototype.rotateRight = function (node) {
   // mnemonic for right rotation: left, child, rotate
+  /**
+   *    L            |     C      new
+   *    |            |              \
+   *    |  old       |    old       old
+   *    V /          V     /         /
+   *   new          new   /         /
+   *      \              /         /
+   *      new.R        new.R     new.R
+   */
   var newRoot;
   if (node) {
     newRoot = node.left;
@@ -126,6 +135,15 @@ SplayBST.prototype.rotateRight = function (node) {
 
 SplayBST.prototype.rotateLeft = function (node) {
   // mnemonic for left rotation: right, child, rotate
+  /**
+   *          R     C       |      new
+   *          |             |      /
+   *     old  |    old      |    old
+   *        \ V      \      V      \
+   *         new      \    new      \
+   *        /          \             \
+   *     new.L         new.L         new.L
+   */
   var newRoot;
   if (node) {
     newRoot = node.right;
